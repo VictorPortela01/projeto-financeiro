@@ -5,6 +5,8 @@ const {
   sendRefreshToken,
 } = require("../utils/tokenUtils");
 
+const jwt = require("jsonwebtoken");
+
 // Função de utilizdade para enviar a resposta(evita repetição)
 const sendTokenResponse = async (res, user, statusCode) => {
   const accessToken = generateAccessToken(user._id);
@@ -132,5 +134,52 @@ exports.logoutUser = async (req, res, next) => {
     res.status(200).json({ success: true, message: "Logout bem-sucedido." });
   } catch (error) {
     next(error);
+  }
+};
+
+// @desc Refresh Access Token
+// @route GET /api/auth/refresh
+// @access Public (usa o cookie HttpOnly)
+exports.handleRefreshToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Refresh token não encontrado." });
+    }
+
+    // 1. Verifica se o refresh token é válido
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    // 2. Busca o usuário no DB
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Usuário não encontrado." });
+    }
+
+    // 3. (SEGURANÇA EXTRA) Verifica se o hash do token está no array do usuário
+    const hashedToken = user.getHashedRefreshToken(refreshToken);
+    if (!user.refreshTokens.includes(hashedToken)) {
+      return res
+        .status(403) // 403 Forbidden - token roubado ou já invalidado
+        .json({
+          success: false,
+          message: "Token inválido (possivelmente revogado).",
+        });
+    }
+
+    // 4. Tudo certo. Gera um NOVO Access Token
+    const newAccessToken = generateAccessToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+    });
+  } catch (error) {
+    // Se o JWT falhar (expirado, malformado)
+    return res.status(403).json({ success: false, message: "Refresh token inválido ou expirado."})
   }
 };

@@ -4,15 +4,19 @@ const {
   registerUser,
   loginUser,
   logoutUser,
+  handleRefreshToken,
 } = require("../controllers/authController");
+// Importar nosso novo middleware
+const { protect } = require("../middleware/authMiddleware");
 
-// Mapeia a rota POST /api/auth/register para a função registerUser
+// Rotas públicas
 router.post("/register", registerUser);
-
-// Mapeia a rota POST /api/auth/login para a função loginUser
 router.post("/login", loginUser);
+router.post("/refresh", handleRefreshToken);
 
-// Mapeia a rota POST /api/auth/logout para a função logoutUser
-router.post("/logout", logoutUser);
+// Rotas protegidas (precissam de Access Token)
+router.post("/logout", protect, logoutUser)
+
+
 
 module.exports = router;
