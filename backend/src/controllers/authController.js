@@ -17,7 +17,7 @@ const sendTokenResponse = async (res, user, statusCode) => {
   // 1. Criar o hash no token
   const hashedToken = user.getHashedRefreshToken(refreshToken);
   // 2. Adiciona o hash no array do usuário no DB
-  User.refreshToken.push(hashedToken);
+  user.refreshToken.push(hashedToken);
   await user.save();
 
   // Envia o access token e os dados do usuário do corpo da resposta

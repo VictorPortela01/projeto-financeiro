@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -45,6 +46,11 @@ UserSchema.pre("save", async function (next) {
 // Método para comparar a senha informada no login com a senha do banco
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Gera hash seguro do refresh token
+UserSchema.methods.getHashedRefreshToken = function (token) {
+  return crypto.createHash("sha256").update(token).digest("hex");
 };
 
 const User = mongoose.model("User", UserSchema);

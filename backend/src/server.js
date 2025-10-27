@@ -7,7 +7,8 @@ const connectDB = require("./config/db"); // Importa nossa função de conexão
 
 // 1.1 Importação de Rotas
 const authRoutes = require("./routes/authRoutes");
-
+const categoryRoutes = require("./routes/categoryRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 // 2. Configurações Iniciais
 dotenv.config(); // Carrega as variáveis do .env para process.env
 connectDB(); // Executa a função de conexão com o banco de dados
@@ -25,6 +26,10 @@ app.get("/api/test", (req, res) => {
 
 // 4.1 Usando rotas de autenticação
 app.use("/api/auth", authRoutes);
+
+// 4.2 USANDO AS ROTAS DE DADOS
+app.use("/api/categories", categoryRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 // 5. Inicialização do Servidor
 const PORT = process.env.PORT || 5000; // Pega a porta do .env ou usa 5000
