@@ -1,11 +1,98 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
 
 const LoginPage = () => {
-  return (
-    <div className='flex min-h-screen items-center justify-center'>
-        <h1 className='text-3xl font-bold'>Página de Login</h1>
-    </div>
-  )
-}
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-export default LoginPage
+  const { login } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+    } catch (err) {
+      setError(
+        err.message || "Falha ao fazer login. Verifique suas credenciais"
+      );
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800">
+        <h1 className="mb-6 text-center text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Entrar
+        </h1>
+
+        {/* Exibição de Erro */}
+        {error && (
+          <div className="mb-4 rounded-md bg-red-100 p-3 text-center text-red-700 dark:bg-red-900 dark:text-red-200">
+            {error}
+          </div>
+        )}
+
+        {/* Formulário */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Email
+            </label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="seuemail@exemplo.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Senha
+            </label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <Button type="submit" isLoading={isLoading}>
+            {isLoading ? "Entrando..." : "Entrar"}
+          </Button>
+        </form>
+        <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+          Não tem uma conta?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+          >
+            Registre-se
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;

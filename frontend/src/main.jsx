@@ -1,11 +1,9 @@
 import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // 1. IMPORTAÇÕES DO REACT QUERY
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import AuthProvider from './contexts/AuthContext.js'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 import App from "./App.jsx";
 import "./index.css";
@@ -14,6 +12,10 @@ import "./index.css";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+
+// Auth Wrappers (Nossos novos componentes)
+import PrivateRoute from "./components/auth/PrivateRoute.jsx";
+import PublicOnlyRoute from "./components/auth/PublicOnlyRoute.jsx";
 
 // 2. cRIAÇÃO DO CLIENTE
 // o QueryClient é o "cérebro" do React Query
@@ -32,21 +34,38 @@ const queryClient = new QueryClient({
 // 1. Criação do Roteador
 const router = createBrowserRouter([
   {
-    path: "/", // Rota Raiz
-    element: <App />, //  Renderiza o Layout Raiz (App.jsx)
+    path: "/",
+    element: (
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    ), 
     // Children são as páginas que serão renderizadas DENTRO do <Outlet /> do App.jsx
     children: [
+      // --- Rota Privadas (protegidas) ---
       {
-        index:  true  , // Rota: http://localhost:5173/
-        element: <DashboardPage />,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "/",
+            element: <DashboardPage />,
+          },
+        ],
       },
+
+      // --- Rota Públicas (Apenas para não logados) ---
       {
-        path: "/login", // Rota: http://localhost:5173/login
-        element: <LoginPage />,
-      },
-      {
-        path: "/register", // // Rota: http://localhost:5173/register
-        element: <RegisterPage />,
+        element: <PublicOnlyRoute />,
+        children: [
+          {
+            path: "/login", // Rota: http://localhost:5173/login
+            element: <LoginPage />,
+          },
+          {
+            path: "/register", // // Rota: http://localhost:5173/register
+            element: <RegisterPage />,
+          },
+        ],
       },
     ],
   },
@@ -55,11 +74,8 @@ const router = createBrowserRouter([
 // 3 ATUALIZAÇÃO DO RENDER
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* ENVOLVENDO A APLICAÇÃO COM O PROVIDER */}
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 );
