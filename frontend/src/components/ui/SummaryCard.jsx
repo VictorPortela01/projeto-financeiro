@@ -24,7 +24,7 @@ const SummaryCard = ({ title, value, type }) => {
                 <Icon className={`h-6 w-6 ${color}`} />
             </div>
             <p className={`mt-2 text-3xl font-bold ${color}`}>
-                {formatCurrency(SummaryCard)}
+                {formatCurrency(value)}
             </p>
         </div>
     );

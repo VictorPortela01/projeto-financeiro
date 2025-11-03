@@ -19,7 +19,7 @@ const sendRefreshToken = (res, token) => {
   res.cookie("refreshToken", token, {
     httpOnly: true, // Imprede acesso via JavaScript (segurança contra XSS)
     secure: process.env.NODE_ENV === "production", // Use 'true' em produção (HTTPS)
-    sameSite: "strict", // Proteção conta CSRF
+    sameSite: "Lax", // Proteção conta CSRF
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias (mesmo tempo do token)
     path: '/',
   });

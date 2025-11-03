@@ -20,22 +20,26 @@ const DashboardLoading = () => {
 
 const DashboardPage = () => {
   // 1. Usando nosso Hook customizado!
-  const { data: summary, isLoading, isError, error } = useSummary();
+  const { summary, isLoadingSummary, isErrorSummary, errorSummary } = useSummary();
 
   // 2. Estado de Carregamento (do React Query)
-  if(isLoading) return <DashboardLoading />;
+  if(isLoadingSummary) return <DashboardLoading />;
 
   // 3. Estado de Erro
-  if(isError) {
+  if(isErrorSummary) {
     return (
       <div className="container mx-auto p-4 sm:px-6 lg:px-8">
         <div className="rounded-md bg-red-100 p-4 text-red-700 dark:bg-red-900 dark:text-red-200">
           <p>
-            <strong>Erro ao carregar o resumo:</strong> {error?.message || "Erro desconhecido"}
+            <strong>Erro ao carregar o resumo:</strong> {errorSummary.message}
           </p>
         </div>
       </div>
     )
+  }
+
+  if(!summary) {
+    return <DashboardLoading />;
   }
 
   // 4. Estado de Sucesso (Exibindo os dados)
@@ -55,11 +59,11 @@ const DashboardPage = () => {
         />
     </div>
 
-    /**
+    {/* /**
       1. Gráfico de Despesas (usando 'summary.expensesByCategory')
       2. Formulário de Adicionar Transação (usando o 'useCategories')
       3. Lista de Transações Recentes
-     */
+     */ }
     </div>
   );
 };

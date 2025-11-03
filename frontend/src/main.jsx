@@ -36,7 +36,11 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element:(
+        <AuthProvider>
+         <App />
+        </AuthProvider>
+        ),
     // Children são as páginas que serão renderizadas DENTRO do <Outlet /> do App.jsx
     children: [
       // --- Rota Privadas (protegidas) ---
@@ -77,9 +81,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
         <RouterProvider router={router} />
-      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
 );

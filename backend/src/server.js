@@ -17,7 +17,10 @@ connectDB(); // Executa a função de conexão com o banco de dados
 const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
-app.use(cors()); // Permite que o frontend acesse esta API
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+})); // Permite que o frontend acesse esta API
 app.use(express.json()); // Permite que o servidor entenda JSON
 app.use(cookieParser()); // Permite que o servidor leia cookies (para o Refresh Token)
 
@@ -32,8 +35,7 @@ app.use("/api/auth", authRoutes);
 // 4.2 USANDO AS ROTAS DE DADOS
 app.use("/api/categories", categoryRoutes);
 app.use("/api/transactions", transactionRoutes);
-app.use("/api/transactions", transactionRoutes);
-app.use("/api/dashborad", dashboardRoutes); // <-- ADICIONE ISTO
+app.use("/api/dashboard", dashboardRoutes); // <-- ADICIONE ISTO
 
 // 5. Inicialização do Servidor
 const PORT = process.env.PORT || 5000; // Pega a porta do .env ou usa 5000

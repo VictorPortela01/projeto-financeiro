@@ -26,7 +26,10 @@ const UserSchema = new mongoose.Schema(
       select: false, // Não inclui a senha por padrão
     },
     
-    refreshTokens: [String], // Vamos armazenar os hashes dos tokens aqui
+    refreshTokens: {
+      type: [String],
+      default: [],
+    }, // Vamos armazenar os hashes dos tokens aqui
   },
   {
     // Adiciona os campos "createdAt" e "updatedAt"

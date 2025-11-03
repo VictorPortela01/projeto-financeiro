@@ -12,6 +12,10 @@ const sendTokenResponse = async (res, user, statusCode) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
 
+  if(!user.refreshToken) {
+    user.refreshToken = [];
+  }
+
   sendRefreshToken(res, refreshToken); // Envia o refresh token no cookie
 
   // 1. Criar o hash no token
