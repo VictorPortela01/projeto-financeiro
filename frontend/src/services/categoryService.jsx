@@ -1,4 +1,4 @@
-import api from './api';
+import api from "./api";
 
 /**
  * Busca todos as categorias do usuário logado.
@@ -6,12 +6,24 @@ import api from './api';
  */
 
 export const getCategoriesReq = async () => {
-    try {
-        const res = await get('/categories');
-        return res.data // Retorna {success: true, count: X, data: [...] }
-    } catch (error) {
-        throw error.response?.data || {success: false, message: "Erro de rede"};
-    }
+  try {
+    const res = await get("/categories");
+    return res.data; // Retorna {success: true, count: X, data: [...] }
+  } catch (error) {
+    throw error.response?.data || { success: false, message: "Erro de rede" };
+  }
 };
 
-// (Vamos adcionar createCategory, updateCategory, etc. aqui mais tarde)
+/**
+ * Cria uma nova categoria
+ * @param {string} name
+ */
+
+export const createCategoryReq = async (name) => {
+  try {
+    const res = await post("/categories", { name });
+    return res.data;
+  } catch (error) {
+    throw error.res?.data || { success: false, message: "Erro de rede" };
+  }
+};
