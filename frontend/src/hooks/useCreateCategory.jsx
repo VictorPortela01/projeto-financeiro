@@ -12,10 +12,10 @@ export const useCreateCategory = () => {
   } = useMutation({
     mutationFn: createCategoryReq,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories "] });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       console.log("Categoria criada! Atualizando a lista..");
     },
-    onError: () => {
+    onError: (error) => {
       console.error("Falha ao criar categoria: ", error.message);
     },
   });

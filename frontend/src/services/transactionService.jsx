@@ -21,7 +21,7 @@ export const getTransactionsReq = async () => {
  */
 export const createTransactionReq = async (transactionData) => {
   try {
-    const res = await post("/transactions", transactionData);
+    const res = await api.post("/transactions", transactionData);
     return res.data;
   } catch (error) {
     throw error.res?.data || { success: false, message: "Erro de rede" };

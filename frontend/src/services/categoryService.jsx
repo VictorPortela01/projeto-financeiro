@@ -7,7 +7,7 @@ import api from "./api";
 
 export const getCategoriesReq = async () => {
   try {
-    const res = await get("/categories");
+    const res = await api.get("/categories");
     return res.data; // Retorna {success: true, count: X, data: [...] }
   } catch (error) {
     throw error.response?.data || { success: false, message: "Erro de rede" };
@@ -21,9 +21,9 @@ export const getCategoriesReq = async () => {
 
 export const createCategoryReq = async (name) => {
   try {
-    const res = await post("/categories", { name });
+    const res = await api.post("/categories", { name });
     return res.data;
   } catch (error) {
-    throw error.res?.data || { success: false, message: "Erro de rede" };
+    throw error.response?.data || { success: false, message: "Erro de rede" };
   }
 };
