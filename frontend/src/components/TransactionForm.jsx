@@ -3,6 +3,9 @@ import Input from "./ui/Input";
 import Button from "./ui/Button";
 import { useCategories } from "../hooks/useCategories"; // Hook de busca
 import { useCreateTransaction } from "../hooks/useCreateTransaction"; // Hook de mutação
+import { useCreateCategory } from "../hooks/useCreateCategory";
+import { FaPlus } from "react-icons/fa";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Pega a data de hoje no formato YYYY-MM-DD (para o <inpuy type="date">)
 const getTodayDate = () => {
@@ -10,10 +13,12 @@ const getTodayDate = () => {
 };
 
 const TransactionForm = ({ onSuccess }) => {
+  const queryClient = useQueryClient();
   // Hooks
   const { categories, isLoadingCategories } = useCategories();
   const { createTransaction, isCreating, errorCreating } =
     useCreateTransaction();
+  const { createCategory, isCreatingCategory } = useCreateCategory();
 
   // Estado do formulário
   const [description, setDescription] = useState("");
@@ -22,6 +27,22 @@ const TransactionForm = ({ onSuccess }) => {
   const [type, setType] = useState("expense");
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
+
+  const handleCreateCategory = () => {
+    const newCategoryName = window.prompt("Qual o nome da nova categoria?");
+
+    if (newCategoryName) {
+      createCategory(newCategoryName, {
+        onSuccess: (newData) => {
+          queryClient.invalidateQueries({ queryKey: ["categoria"] });
+          setCategory(newData.data._id);
+        },
+        onError: (error) => {
+          console.error("Passo 4 (erro): A mutação falhou!", error);
+        },
+      });
+    }
+  };
 
   // Seta a primeira categoria como padrão quando a lista carregar
   useEffect(() => {
@@ -34,8 +55,18 @@ const TransactionForm = ({ onSuccess }) => {
     e.preventDefault();
     setError("");
 
-    if (!description || !value || !date || !category) {
+    if (!category && !isLoadingCategories && categories?.length > 0) {
+      setError("Por favor, selecione uma categoria.");
+      return;
+    }
+
+    if (!description || !value || !date) {
       setError("Por favor, preencha todos os campos");
+      return;
+    }
+
+    if (categories?.length === 0) {
+      setError("Você precisa criar uma categoria primeiro.");
       return;
     }
 
@@ -86,6 +117,7 @@ const TransactionForm = ({ onSuccess }) => {
         onChange={(e) => setDescription(e.target.value)}
       />
 
+      {/* Valor */}
       <Input
         type="number"
         id="value"
@@ -96,7 +128,7 @@ const TransactionForm = ({ onSuccess }) => {
         step="0.01"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Data */}
         <Input
           type="date"
@@ -105,6 +137,7 @@ const TransactionForm = ({ onSuccess }) => {
           value={date}
           onChange={(e) => setDate(e.target.value)}
         />
+
         {/* Tipo (Receita/Despesa) */}
         <select
           id="type"
@@ -118,23 +151,50 @@ const TransactionForm = ({ onSuccess }) => {
         </select>
 
         {/* Categoria */}
-        <select 
-        name="category" 
-        id="category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        disabled={isLoadingCategories}
-        className="w-full rounded-md border border-indigo-300 bg-white px-4 py-2text-gray-900 shadow:sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 ">
-          {isLoadingCategories ? (
-            <option>Carregando categorias...</option>
-          ) : (
-            categories?.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))
-          )}
-        </select>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Categoria
+          </label>
+          <div className="flex items-center gap-2">
+            <select
+              name="category"
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              disabled={isLoadingCategories}
+              className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+            >
+              {isLoadingCategories ? (
+                <option>Carregando categorias...</option>
+              ) : categories && categories.length > 0 ? (
+                categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled value="">
+                  Nenhuma categoria
+                </option>
+              )}
+            </select>
+
+            {/* Botão de Nova Categoria */}
+            <button
+              type="button"
+              onClick={handleCreateCategory}
+              disabled={isCreatingCategory}
+              className="flex shrink-0 rounded-md bg-green-600 p-2 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-offset-gray-800"
+              title="Criar nova categoria"
+            >
+              {isCreatingCategory ? (
+                <span className="animate-pulse">...</span>
+              ) : (
+                <FaPlus />
+              )}
+            </button>
+          </div>
+        </div>
       </div>
 
       <Button type="submit" isLoading={isCreating}>

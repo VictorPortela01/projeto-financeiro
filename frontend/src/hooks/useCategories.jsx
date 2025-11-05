@@ -6,6 +6,7 @@ export const useCategories = () => {
         queryKey:['categories'], // Chave ID
         queryFn: getCategoriesReq, // Função de Busca
         select: (data) => data.data,
+        staleTime: 1000 * 60
     });
 
     return {
