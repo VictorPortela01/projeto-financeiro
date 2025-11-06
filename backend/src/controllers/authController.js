@@ -12,17 +12,20 @@ const sendTokenResponse = async (res, user, statusCode) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
 
-  if(!user.refreshToken) {
-    user.refreshToken = [];
+  if (!Array.isArray(user.refreshTokens)) {
+    user.refreshTokens = [];
   }
-
-  sendRefreshToken(res, refreshToken); // Envia o refresh token no cookie
 
   // 1. Criar o hash no token
   const hashedToken = user.getHashedRefreshToken(refreshToken);
   // 2. Adiciona o hash no array do usuário no DB
-  user.refreshToken.push(hashedToken);
+  user.refreshTokens.push(hashedToken);
+
+  user.markModified("refreshTokens");
+
   await user.save();
+
+  sendRefreshToken(res, refreshToken); // Envia o refresh token no cookie
 
   // Envia o access token e os dados do usuário do corpo da resposta
   res.status(statusCode).json({
@@ -184,6 +187,8 @@ exports.handleRefreshToken = async (req, res, next) => {
     });
   } catch (error) {
     // Se o JWT falhar (expirado, malformado)
-    return res.status(403).json({ success: false, message: "Refresh token inválido ou expirado."})
+    return res
+      .status(403)
+      .json({ success: false, message: "Refresh token inválido ou expirado." });
   }
 };

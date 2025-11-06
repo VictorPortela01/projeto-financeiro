@@ -50,7 +50,7 @@ const DashboardPage = () => {
   return (
     <>
       <div className="container mx-auto sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="m-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
             Meu Resumo
           </h1>
