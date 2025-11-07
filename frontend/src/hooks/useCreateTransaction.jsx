@@ -21,7 +21,7 @@ export const useCreateTransaction = () => {
       queryClient.invalidateQueries({ queryKey: ["dashboardSummary"] });
 
       // Invalida a lista de transações (vamos criar essa query depois)
-      // queryCLient.invalidateQueries({ queryKey: ["transactions"]});
+      queryClient.invalidateQueries({ queryKey: ["transactions"]});
 
       console.log("Transação criada! Atualizando o dashboard...");
     },
