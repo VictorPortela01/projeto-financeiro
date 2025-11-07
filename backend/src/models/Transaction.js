@@ -27,6 +27,11 @@ const TransactionSchema = new mongoose.Schema(
       ref: "Category",
       required: [true, "A categoria é obrigatória."],
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: false,
+    },
   },
   {
     timestamps: true,

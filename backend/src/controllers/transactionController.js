@@ -139,7 +139,7 @@ exports.updateTransaction = async (req, res, next) => {
 // @desc  Deletar uma transação
 // @route DELETE /api/transactions/:id
 // @access Private
-exports.deleteTransaction = async () => {
+exports.deleteTransaction = async (req, res, next) => {
   // 1. Busca a transação (garantindo que pertence ao usuário)
   try{
     const transaction = await Transaction.findOne({

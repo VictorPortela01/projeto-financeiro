@@ -12,7 +12,7 @@ const { protect } = require("../middleware/authMiddleware");
 // Rotas públicas
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/refresh", handleRefreshToken);
+router.get("/refresh", handleRefreshToken);
 
 // Rotas protegidas (precissam de Access Token)
 router.post("/logout", protect, logoutUser)

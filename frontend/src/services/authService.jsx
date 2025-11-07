@@ -53,7 +53,9 @@ export const logoutReq = async () => {
 
 export const refreshReq = async () => {
   try {
-    const res = await api.get("/auth/refresh");
+    const res = await api.get("/auth/refresh", null, {
+      withCredentials: true,
+    });
     return res.data;
   } catch (error) {
     throw error.response?.data || { success: false, message: "Erro de rede" };

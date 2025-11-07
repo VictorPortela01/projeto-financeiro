@@ -1,12 +1,17 @@
 const Transaction = require("../models/Transaction");
 const mongoose = require("mongoose");
 
-// @desc    Obter o resumo financieor (saldos e gastos por categoria)
+// @desc    Obter o resumo financeiro (saldos e gastos por categoria)
 // @route   GET /api/dashboard/summary
 // @access  Private
 
 exports.getSummary = async (req, res, next) => {
   try {
+    if (!req.user || !req.user._id) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Usuário não autenticado" });
+    }
     const userId = req.user._id;
     const { month, year } = req.query; // Filtros opcionais de data
 
@@ -49,7 +54,7 @@ exports.getSummary = async (req, res, next) => {
 
     const balance = totalIncome - totalExpense;
 
-    // --- 4.Pipeline de Agregação para Categoris (SÓ despesas) ---
+    // --- 4.Pipeline de Agregação para Categorias (SÓ despesas) ---
     // (Conforme solicitado no Ponto 4 no planejamento)
     const categoryMatch = { ...matchCriteria, type: "expense" };
     const expensesByCategory = await Transaction.aggregate([
@@ -78,14 +83,20 @@ exports.getSummary = async (req, res, next) => {
       {
         $project: {
           _id: 0,
-          categoryId: "$_id",
-          name: { $arrayElemAt: ["$categoryDetails.name", 0] },
           total: "$total",
+          
+          name: {
+            $ifNull: [
+              { $arrayElemAt: ["$categoryDetails.name", 0] },
+              "Sem categoria",
+            ],
+          },
+          
         },
       },
     ]);
 
-    // --- 5. Envair Resposta ---
+    // --- 5. Enviar Resposta ---
     res.status(200).json({
       success: true,
       data: {
