@@ -10,7 +10,7 @@ export const getTransactionsReq = async () => {
     const res = await api.get("/transactions");
     return res.data;
   } catch (error) {
-    throw error.res?.data || { success: false, message: "Erro de rede" };
+    throw error.response.data || { success: false, message: "Erro de rede" };
   }
 };
 
@@ -24,6 +24,35 @@ export const createTransactionReq = async (transactionData) => {
     const res = await api.post("/transactions", transactionData);
     return res.data;
   } catch (error) {
-    throw error.res?.data || { success: false, message: "Erro de rede" };
+    throw error.response.data || { success: false, message: "Erro de rede" };
+  }
+};
+
+/**
+ * Atualiza uma transação já existente
+ * @param {string} id
+ * @param {object} transactionData
+ */
+
+export const updateTransactionReq = async ({ id, transactionData }) => {
+  try {
+    const res = await api.put(`/transactions/${id}`, transactionData);
+    return res.data;
+  } catch (error) {
+    throw error.response.data || { success: false, message: "Erro de rede" };
+  }
+};
+
+/**
+ * Deleta uma transação
+ * @param {string} id
+ */
+
+export const deleteTransactionReq = async ({ id }) => {
+  try {
+    const res = await api.delete(`/transactions/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error.response.data || { success: false, message: "Erro de rede" };
   }
 };
