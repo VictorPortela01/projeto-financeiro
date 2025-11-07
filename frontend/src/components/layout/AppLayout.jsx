@@ -24,7 +24,7 @@ const Navbar = () => {
                         <button onClick={logout}
                             title='Sair'
                             aria-label='Sair'
-                            className='ml-4 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'>
+                            className='ml-4 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer'>
                                 <FaSignOutAlt className='h-5 w-5'/>
                         </button>
 
