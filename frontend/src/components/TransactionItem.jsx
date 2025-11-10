@@ -1,19 +1,8 @@
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaEdit, FaTrash } from "react-icons/fa";
+import { formatCurrency } from "../utils/formatters";
+import { formatDate } from "../utils/formatters";
 
-const formatCurrency = (value) => {
-  if (value === undefined || value === null) {
-    return "R$ 0,00";
-  }
-  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-};
-
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString("pt-BR", {
-    timeZone: "UTC", // Importante pois nossas datas não têm fuso
-  });
-};
-
-const TransactionItem = ({ transaction }) => {
+const TransactionItem = ({ transaction, onEdit, onDelete }) => {
   const { description, value, type, category, date } = transaction;
 
   const isIncome = type === "income";
@@ -23,31 +12,52 @@ const TransactionItem = ({ transaction }) => {
     : "text-red-600 dark:text-red-500";
 
   return (
-    <li className="flex items-center justify-between border-b border-gray-200 py-4 last:border-b-0 dark:border-gray-700">
-      <div className="flex items-center gap-4">
+    <li className="flex items-center justify-between gap-2 py-4"> {/* Adicionado gap-2 */}
+      
+      {/* Esquerda: Ícone e Descrição */}
+      <div className="flex min-w-0 items-center gap-4"> {/* Adicionado min-w-0 */}
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-            isIncome
-              ? "bg-green-100 dark:bg-green-900"
-              : "bg-red-100 dark:bg-red-900"
+            isIncome ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'
           }`}
         >
-            <Icon className={`h-5 w-5 ${color}`}/>
+          <Icon className={`h-5 w-5 ${color}`} />
         </span>
-        <div className="flex flex-col">
-            <span className="font-medium text-gray-900 dark:text-gray-100">
-                {description}
-            </span>
-            <span className="text-sm text-gray-500 dark:text-gray-500">
-                {category.name} | {formatDate(date)}
-            </span>
+        <div className="min-w-0 flex-1"> {/* Adicionado min-w-0 e flex-1 */}
+          <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+            {description}
+          </p>
+          <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+            {category?.name || 'Sem Categoria'} | {formatDate(date)}
+          </p>
         </div>
       </div>
 
-      {/* Valor */}
-      <div className={`text-lg font-bold ${color}`}>
-        {isIncome ? "+" : "-"}
-        {formatCurrency(Math.abs(value))}
+      {/* Direita: Valor e Botões */}
+      <div className="flex shrink-0 items-center gap-4">
+        {/* Valor (COM A CORREÇÃO) */}
+        <div className={`text-lg font-bold ${color}`}>
+          {isIncome ? '+' : '-'}
+          {formatCurrency(Math.abs(value))} {/* <-- CORREÇÃO DO MATH.ABS */}
+        </div>
+
+        {/* Botões de Ação */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => onEdit(transaction)}
+            className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+            title="Editar"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => onDelete(transaction._id)}
+            className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
+            title="Excluir"
+          >
+            <FaTrash />
+          </button>
+        </div>
       </div>
     </li>
   );

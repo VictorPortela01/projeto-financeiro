@@ -1,12 +1,5 @@
-import React from 'react';
+import { formatCurrency } from "../../utils/formatters";
 
-// Função de utilidade para formatar moeda (Vamos criar o arquivo) /utils/
-const formatCurrency = (value) => {
-    if(value === undefined || value === null) {
-        return 'R$ 0,00';
-    }
-    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-};
 
 const BalanceCard = ({ balance }) => {
     const isNegative = balance < 0;

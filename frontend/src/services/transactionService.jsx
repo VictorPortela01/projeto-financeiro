@@ -48,7 +48,7 @@ export const updateTransactionReq = async ({ id, transactionData }) => {
  * @param {string} id
  */
 
-export const deleteTransactionReq = async ({ id }) => {
+export const deleteTransactionReq = async (id) => {
   try {
     const res = await api.delete(`/transactions/${id}`);
     return res.data;

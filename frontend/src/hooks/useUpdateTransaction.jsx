@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  updateTransactionReq,
-  useUpdateTransactions,
+  updateTransactionReq
 } from "../services/transactionService";
 
-export const useUpdateTransactions = () => {
+export const useUpdateTransaction = () => {
   const queryClient = useQueryClient();
 
   const {

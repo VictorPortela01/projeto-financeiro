@@ -23,10 +23,10 @@ export const useDeleteTransaction = () => {
     },
   });
 
-  return [
+  return {
     deleteTransaction,
     isDeleting,
     isErrorDeleting,
     errorDeleting
-  ]
+  }
 };

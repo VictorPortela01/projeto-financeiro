@@ -6,19 +6,15 @@ import { useCreateTransaction } from "../hooks/useCreateTransaction"; // Hook de
 import { useCreateCategory } from "../hooks/useCreateCategory";
 import { FaPlus } from "react-icons/fa";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUpdateTransaction } from "../hooks/useUpdateTransaction";
 
 // Pega a data de hoje no formato YYYY-MM-DD (para o <inpuy type="date">)
 const getTodayDate = () => {
   return new Date().toISOString().split("T")[0];
 };
 
-const TransactionForm = ({ onSuccess }) => {
+const TransactionForm = ({ onSuccess, transactionToEdit }) => {
   const queryClient = useQueryClient();
-  // Hooks
-  const { categories, isLoadingCategories } = useCategories();
-  const { createTransaction, isCreating, errorCreating } =
-    useCreateTransaction();
-  const { createCategory, isCreatingCategory } = useCreateCategory();
 
   // Estado do formulário
   const [description, setDescription] = useState("");
@@ -28,17 +24,44 @@ const TransactionForm = ({ onSuccess }) => {
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
 
+  // Hooks de dados
+  const { categories, isLoadingCategories } = useCategories();
+  const { createTransaction, isCreating, errorCreating } =
+    useCreateTransaction();
+  const { createCategory, isCreatingCategory } = useCreateCategory();
+
+  const { updateTransaction, isUpdating } = useUpdateTransaction();
+
+  useEffect(() => {
+    if (transactionToEdit) {
+      setDescription(transactionToEdit.description);
+      setValue(transactionToEdit.value);
+      setDate(new Date(transactionToEdit.date).toISOString().split("T")[0]);
+      setType(transactionToEdit.type);
+      setCategory(
+        transactionToEdit.category?._id || transactionToEdit.category
+      );
+    } else {
+      setDescription("");
+      setValue("");
+      setDate(getTodayDate());
+      setType("expense");
+      setCategory(categories && categories.length > 0 ? categories[0]._id : "");
+    }
+  }, [transactionToEdit, categories]);
+
   const handleCreateCategory = () => {
     const newCategoryName = window.prompt("Qual o nome da nova categoria?");
 
     if (newCategoryName) {
       createCategory(newCategoryName, {
         onSuccess: (newData) => {
-          queryClient.invalidateQueries({ queryKey: ["categoria"] });
+
+          queryClient.invalidateQueries({ queryKey: ["categories"] });
           setCategory(newData.data._id);
         },
         onError: (error) => {
-          console.error("Passo 4 (erro): A mutação falhou!", error);
+          console.error("Falha ao criar categoria", error);
         },
       });
     }
@@ -78,18 +101,30 @@ const TransactionForm = ({ onSuccess }) => {
       category,
     };
 
-    createTransaction(transactionData, {
-      onSuccess: () => {
-        setDescription("");
-        setValue("");
-        setDate(getTodayDate());
-        setType("expense");
-        onSuccess();
-      },
-      onError: (err) => {
-        setError(err.message || "Falha ao criar transação.");
-      },
-    });
+    if (transactionToEdit) {
+      // --- LÓGICA DE ATUALIZAÇÃO ---
+      updateTransaction(
+        { id: transactionToEdit._id, transactionData },
+        {
+          onSuccess: () => {
+            onSuccess();
+          },
+          onError: (err) => {
+            setError(err.message || "Falha ao atualizar transação.");
+          },
+        }
+      );
+    } else {
+      // --- LÓGICA DE CRIAÇÃO
+      createTransaction(transactionData, {
+        onSuccess: () => {
+          onSuccess();
+        },
+        onError: (err) => {
+          setError(err.message || "Falha ao criar transação.");
+        },
+      });
+    }
   };
 
   return (
@@ -197,8 +232,12 @@ const TransactionForm = ({ onSuccess }) => {
         </div>
       </div>
 
-      <Button type="submit" isLoading={isCreating}>
-        {isCreating ? "Salvando" : "Salvar Transação"}
+      <Button type="submit" isLoading={isCreating || isUpdating}>
+        {isCreating
+          ? "Salvando"
+          : isUpdating
+          ? "Atualizando..."
+          : "Salvar Transação"}
       </Button>
     </form>
   );

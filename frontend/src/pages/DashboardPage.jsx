@@ -8,7 +8,7 @@ import TransactionForm from "../components/TransactionForm";
 
 import CategoryChart from "../components/charts/CategoryChart";
 
-import RecentTransactionList from '../components/RecentTransactionList';
+import RecentTransactionList from "../components/RecentTransactionList";
 
 // Componente de Loading
 const DashboardLoading = () => {
@@ -33,6 +33,25 @@ const DashboardPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // --- 1. NOVO ESTADO PARA GERENCIAR A EDIÇÃO ---
+  const [editingTransaction, setEditingTransaction] = useState(null);
+
+  // --- 2. NOVAS FUNÇÕES PARA ABRIR/FECHAR O MODAL ---
+  const openCreateModal = () => {
+    setEditingTransaction(null); // Garante que é o modo "Criar"
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (transaction) => {
+    setEditingTransaction(transaction); // Define qual transação estamos editando
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingTransaction(null); // Limpa o estado de edição ao fechar
+  };
+
   // 2. Estado de Carregamento (do React Query)
   if (isLoadingSummary || !summary) return <DashboardLoading />;
 
@@ -54,12 +73,13 @@ const DashboardPage = () => {
   return (
     <>
       <div className="container mx-auto p-4 sm:px-6 lg:px-8">
+        {/* Cabeçalho com o Botão */}
         <div className="m-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
             Meu Resumo
           </h1>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={openCreateModal}
             className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-900 cursor-pointer"
           >
             <FaPlus />
@@ -68,6 +88,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* Cards de Resumo */}
       <div className="container mx-auto p-4 sm:p-6 lg:px-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <BalanceCard balance={summary.balance} />
@@ -89,17 +110,19 @@ const DashboardPage = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <RecentTransactionList />
+            <RecentTransactionList onEdit={openEditModal} />
           </div>
-          
         </div>
 
         <Modal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Adicionar Nova Transação"
+          onClose={closeModal}
+          title={
+            editingTransaction ? "Editar Transação" : "Adicionar Nova Transação"
+          }
         >
-          <TransactionForm onSuccess={() => setIsModalOpen(false)} />
+          <TransactionForm onSuccess={closeModal} 
+          transactionToEdit={editingTransaction}/>
         </Modal>
       </div>
     </>
