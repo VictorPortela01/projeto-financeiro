@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { StrictMode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AppLayout from './components/layout/AppLayout.jsx'
+import AppLayout from "./components/layout/AppLayout.jsx";
 // 1. IMPORTAÇÕES DO REACT QUERY
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
@@ -17,6 +17,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 // Auth Wrappers (Nossos novos componentes)
 import PrivateRoute from "./components/auth/PrivateRoute.jsx";
 import PublicOnlyRoute from "./components/auth/PublicOnlyRoute.jsx";
+import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 
 // 2. cRIAÇÃO DO CLIENTE
 // o QueryClient é o "cérebro" do React Query
@@ -36,11 +37,13 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element:(
+    element: (
+      <ThemeProvider>
         <AuthProvider>
-         <App />
+          <App />
         </AuthProvider>
-        ),
+      </ThemeProvider>
+    ),
     // Children são as páginas que serão renderizadas DENTRO do <Outlet /> do App.jsx
     children: [
       // --- Rota Privadas (protegidas) ---
@@ -81,7 +84,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 );
