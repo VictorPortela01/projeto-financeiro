@@ -44,7 +44,7 @@ app.use(cookieParser()); // Permite que o servidor leia cookies (para o Refresh 
 
 app.get("/api/test-env", (req, res) => {
   console.log("Testando variável FRONTEND_URL");
-  console.log(proccess.env.FRONTEND_URL || "!!!INDEFINIDA");
+  console.log(process.env.FRONTEND_URL || "!!!INDEFINIDA");
   
   
 })
