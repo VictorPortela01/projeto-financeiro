@@ -19,7 +19,7 @@ const app = express(); // Inicializa o Express
 // 3. Middlewares (Recursos que rodam entre requisições)
 const allowedOrigin = [
   'http://localhost:5173',
-  process.env.FRONTEND_URL
+  'https://financeiro-web-ixw1.onrender.com'
 ]
 
 const corsOptions = {
@@ -41,13 +41,6 @@ app.use(cors(corsOptions));
 // Permite que o frontend acesse esta API
 app.use(express.json()); // Permite que o servidor entenda JSON
 app.use(cookieParser()); // Permite que o servidor leia cookies (para o Refresh Token)
-
-app.get("/api/test-env", (req, res) => {
-  console.log("Testando variável FRONTEND_URL");
-  console.log(process.env.FRONTEND_URL || "!!!INDEFINIDA");
-  
-  
-})
 
 // 4. Rota de Teste (para ver se está funcionando)
 app.get("/api/test", (req, res) => {
