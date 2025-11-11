@@ -17,6 +17,11 @@ connectDB(); // Executa a função de conexão com o banco de dados
 const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
+const allowedOrigin = [
+  'https://localhost:5173',
+  process.env.FRONTEND_URL
+]
+
 const corsOptions = {
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
