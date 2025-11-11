@@ -19,7 +19,8 @@ const app = express(); // Inicializa o Express
 // 3. Middlewares (Recursos que rodam entre requisições)
 const allowedOrigin = [
   'http://localhost:5173',
-  'https://financeiro-web-ixw1.onrender.com'
+  'https://financeiro-web-ixw1.onrender.com',
+  'https://financeiro-web-ixw1.onrender.com/'
 ]
 
 const corsOptions = {
@@ -56,7 +57,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes); // <-- ADICIONE ISTO
 
 // 5. Inicialização do Servidor
-const PORT = process.env.PORT || 5000; // Pega a porta do .env ou usa 5000
+const PORT = process.env.PORT; // Pega a porta do .env ou usa 5000
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
