@@ -18,7 +18,15 @@ const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+
+    if(allowedOrigin.indexOf(origin) === -1) {
+      const msg = "A política de CORS deste site não permite acesso desta origem.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
