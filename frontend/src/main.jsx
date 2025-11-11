@@ -13,13 +13,14 @@ import "./index.css";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import CategoriesPage from "./pages/CategoriesPage.jsx";
 
 // Auth Wrappers (Nossos novos componentes)
 import PrivateRoute from "./components/auth/PrivateRoute.jsx";
 import PublicOnlyRoute from "./components/auth/PublicOnlyRoute.jsx";
 import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 
-// 2. cRIAÇÃO DO CLIENTE
+// 2. CRIAÇÃO DO CLIENTE
 // o QueryClient é o "cérebro" do React Query
 
 const queryClient = new QueryClient({
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
               {
                 path: "/",
                 element: <DashboardPage />,
+              },
+              {
+                path:'/categories',
+                element: <CategoriesPage />
               },
             ],
           },

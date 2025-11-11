@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { FaMoon, FaSignOutAlt, FaSun } from "react-icons/fa";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -18,6 +18,20 @@ const Navbar = () => {
             <h1 className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
               MeuFinanceiro
             </h1>
+            <nav className="hidden md:flex md:gap-6">
+              <Link
+                to="/"
+                className="text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 cursor-pointer"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/categories"
+                className="text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 cursor-pointer"
+              >
+                Categorias
+              </Link>
+            </nav>
           </div>
 
           {/* Nome do Usuário e Logout */}
@@ -25,8 +39,10 @@ const Navbar = () => {
             <span className="hidden text-sm font-medium text-gray-700 dark:text-gray-300 sm:block">
               Olá, {user?.name.split(" ")[0]}
             </span>
-            <button onClick={toggleTheme}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer">
+            <button
+              onClick={toggleTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer"
+            >
               {theme === "light" ? (
                 <FaMoon className="h-5 w-5" />
               ) : (

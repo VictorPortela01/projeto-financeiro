@@ -48,14 +48,14 @@ const TransactionItem = ({ transaction, onEdit, onDelete }) => {
             className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
             title="Editar"
           >
-            <FaEdit />
+            <FaEdit className="cursor-pointer"/>
           </button>
           <button
             onClick={() => onDelete(transaction._id)}
             className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
             title="Excluir"
           >
-            <FaTrash />
+            <FaTrash className="cursor-pointer"/>
           </button>
         </div>
       </div>
