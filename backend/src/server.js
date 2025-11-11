@@ -42,6 +42,13 @@ app.use(cors(corsOptions));
 app.use(express.json()); // Permite que o servidor entenda JSON
 app.use(cookieParser()); // Permite que o servidor leia cookies (para o Refresh Token)
 
+app.get("/api/test-env", (req, res) => {
+  console.log("Testando variável FRONTEND_URL");
+  console.log(proccess.env.FRONTEND_URL || "!!!INDEFINIDA");
+  
+  
+})
+
 // 4. Rota de Teste (para ver se está funcionando)
 app.get("/api/test", (req, res) => {
   res.send("API do Dashboard Financeiro está rodando!");
