@@ -17,22 +17,8 @@ connectDB(); // Executa a função de conexão com o banco de dados
 const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
-const allowedOrigin = [
-  'http://localhost:5173',
-  'https://financeiro-web-ixw1.onrender.com',
-  'https://financeiro-web-ixw1.onrender.com/'
-]
-
 const corsOptions = {
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-
-    if(allowedOrigin.indexOf(origin) === -1) {
-      const msg = "A política de CORS deste site não permite acesso desta origem.";
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+  origin: process.env.FRONTEND_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
