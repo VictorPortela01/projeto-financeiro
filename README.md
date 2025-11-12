@@ -16,7 +16,8 @@ Este projeto foi desenvolvido como um **item de portfólio robusto**, demonstran
 *(Adicionar screenshots do seu app pronto aqui — esta é a parte mais importante do seu portfólio!)*  
 
 | Dashboard (Dark Mode) | Dashboard (Light Mode) |
-| :---: | :---: |
+| <img width="1885" height="924" alt="image" src="https://github.com/user-attachments/assets/85947ab3-a031-40f6-9211-6ee1b329368e" />
+ | :---: |
 |  |  |
 | Modal de Transação | Página de Categorias |
 |  |  |
