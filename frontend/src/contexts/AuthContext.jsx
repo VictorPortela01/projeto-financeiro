@@ -14,6 +14,7 @@ import {
 } from "../services/authService";
 
 import api from "../services/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 // 1. Criação do Contexto
 const AuthContext = createContext();
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true); // Começa true (carregando)
   
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const clearAuth = useCallback(() => {
     setUser(null);
@@ -32,8 +34,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     // Limpa o header de autorização padrão do Axios
     delete api.defaults.headers.common["Authorization"];
+
+    queryClient.clear();
+
     navigate("/login");
-  }, [navigate]);
+  }, [navigate, queryClient]);
 
   // --- Funções de Ação ---
   const login = async (email, password) => {
