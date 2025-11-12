@@ -17,6 +17,12 @@ connectDB(); // Executa a função de conexão com o banco de dados
 const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
+
+const allowedOrigins = [
+  "http://localhost:5173",    
+  "https://projeto-financeiro-orcin.vercel.app" // <-- URL DO VERCEL AQUI
+];
+
 const corsOptions = {
   origin: (origin, callback) => {
     if(!origin || allowedOrigins.indexOf(origin) !== -1) {
