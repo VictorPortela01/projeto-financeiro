@@ -18,7 +18,7 @@ const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: "*",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
