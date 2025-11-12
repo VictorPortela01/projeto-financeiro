@@ -18,7 +18,13 @@ const app = express(); // Inicializa o Express
 
 // 3. Middlewares (Recursos que rodam entre requisições)
 const corsOptions = {
-  origin: "*",
+  origin: (origin, callback) => {
+    if(!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Não permitido pela política de CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -43,7 +49,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes); // <-- ADICIONE ISTO
 
 // 5. Inicialização do Servidor
-const PORT = process.env.PORT; // Pega a porta do .env ou usa 5000
+const PORT = process.env.PORT || 5000; // Pega a porta do .env ou usa 5000
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
