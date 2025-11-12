@@ -8,18 +8,27 @@ Este projeto foi desenvolvido como um **item de portfólio robusto**, demonstran
 ---
 
 ## ✨ Demonstração *(WIP)*  
-🔗 *https://financeiro-web-ixw1.onrender.com/*  
+🔗 *https://projeto-financeiro-orcin.vercel.app*  
 
 ---
 
 ## 📸 Screenshots  
 *(Adicionar screenshots do seu app pronto aqui — esta é a parte mais importante do seu portfólio!)*  
 
-| Dashboard (Dark Mode) | Dashboard (Light Mode) |
+| Dashboard (Dark Mode) | 
 | <img width="1885" height="924" alt="image" src="https://github.com/user-attachments/assets/85947ab3-a031-40f6-9211-6ee1b329368e" />
- | :---: |
-|  |  |
-| Modal de Transação | Página de Categorias |
+| Dashboard (Light Mode) |
+| <img width="1654" height="937" alt="image" src="https://github.com/user-attachments/assets/32cd1dd3-a15b-4d46-8a1d-533bd429ba25" />
+
+| Modal de Transação |
+| <img width="1271" height="809" alt="image" src="https://github.com/user-attachments/assets/39d5ddbc-9562-43e6-977e-773ef92b0f3e" />
+
+|  Dashboard Celular  |
+<img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/d825692f-219f-4414-b966-6a49a8c6a969" />
+
+|| Página de Categorias |
+<img width="1591" height="871" alt="image" src="https://github.com/user-attachments/assets/f0052ca2-595d-40b7-925c-758ad8213f80" />
+
 |  |  |
 
 ---
